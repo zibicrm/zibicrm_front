@@ -37,6 +37,7 @@ import jmoment from "jalali-moment";
 import ReactPaginate from "react-paginate";
 import PageLoading from "../../../utils/LoadingPage";
 import LoadingBtn from "../../../utils/LoadingBtn";
+import { useExcelDownloder } from "react-xls";
 
 const PatientsPaymentsPage = () => {
   const { user, loading } = useAuth();
@@ -60,6 +61,14 @@ const PatientsPaymentsPage = () => {
   const [getDataLoading, setGetDataLoading] = useState(false);
   const [maxPage, setMaxPage] = useState(0);
   const [statistics, setStatistics] = useState(null);
+
+  const { ExcelDownloder, Type } = useExcelDownloder();
+
+  const [excelData, setExcelData] = useState([]);
+
+  const data1 = {
+    files: excelData,
+  };
 
   const head = [
     { id: 0, title: "ردیف" },
@@ -128,6 +137,22 @@ const PatientsPaymentsPage = () => {
           setResults(data.result.documents);
 
           setGetDataLoading(false);
+
+          let result = data.result;
+
+          const formattedData = result?.map((r) => ({
+            نام: r?.document?.name,
+            کارشناس: r.user?.first_name + " " + r.user?.last_name,
+            مطب: r.clinic?.title,
+            تاریخ:
+              jmoment(r.updated_at).locale("fa").format("YYYY/MM/DD") |
+              jmoment(r.updated_at).locale("fa").format("HH:mm"),
+            "هزینه خدمت": r.totalSumPrice.toLocaleString("en-US"),
+            دریافتی: r.totalReceivePrice.toLocaleString("en-US"),
+            "سهم زیبیدنت": r.commission.toLocaleString("en-US"),
+          }));
+
+          setExcelData(formattedData);
         }
       })
       .catch((err) => {
@@ -279,6 +304,16 @@ const PatientsPaymentsPage = () => {
                 <MdCalendarToday />
               </span>
             </PrimaryBtn>
+          </div>
+          <div className="flex flex-row items-center justify-center rounded-cs   min-w-fit text-primary-900 text-xs h-12">
+            <ExcelDownloder
+              key={JSON.stringify(excelData)}
+              data={data1}
+              filename={"پرداختی بیماران"}
+              type={Type.Button}
+            >
+              دانلود اکسل
+            </ExcelDownloder>
           </div>
         </div>
       </div>

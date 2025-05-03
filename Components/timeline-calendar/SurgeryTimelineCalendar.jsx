@@ -102,7 +102,6 @@ const SurgeryTimelineCalendar = ({
                           //   array1.push(i);
                           // }
 
-                          // console.log(array1);
 
                           const array1 = new Array();
                           const array2 = new Array();
@@ -161,9 +160,7 @@ const SurgeryTimelineCalendar = ({
                           }
 
                           // const arr = new Array();
-                          // console.log("Times0", day.times[0]);
                           // day.times.forEach((time) => {
-                          //   console.log('Time',time);
                           //   let doctorStartHour = time.start.split(":")[0];
                           //   let doctorStartMin = time.start.split(":")[1];
                           //   let doctorStart = Number(time.start.split(":")[0]);
@@ -191,13 +188,11 @@ const SurgeryTimelineCalendar = ({
                           //         .format("HH:mm:ss")
                           //     );
                           //   }
-                          //   console.log(arr);
 
                           //   array1.push(...arr);
                           // });
 
-                          // console.log("ARRAY", arr);
-                          // console.log(array1);
+                          
 
                           // let dvs = doctor.dv.find((dv) => dv.key === "DVS");
                           // let appointment_time = Number(dvs.value);
@@ -541,14 +536,7 @@ const SurgeryTimelineCalendar = ({
                                     (s) => s.VisitTime === a
                                   );
 
-                                  console.log(
-                                    "Times",
-                                    array1[0],
-                                    doctorStart,
-                                    doctorStartHour,
-                                    doctorStartMin,
-                                    startSpan
-                                  );
+                                  
                                   // let asd = Number(a.split(":")[0]);
                                   // let fgh =
                                   //   Number(a.split(":")[1]) / 60;
@@ -647,14 +635,7 @@ const SurgeryTimelineCalendar = ({
                                     (s) => s.VisitTime === a
                                   );
 
-                                  console.log(
-                                    "Times",
-                                    array1[0],
-                                    doctorStart,
-                                    doctorStartHour,
-                                    doctorStartMin,
-                                    startSpan
-                                  );
+                                 
                                   // let asd = Number(a.split(":")[0]);
                                   // let fgh =
                                   //   Number(a.split(":")[1]) / 60;
@@ -753,16 +734,7 @@ const SurgeryTimelineCalendar = ({
                                     (s) => s.VisitTime === a
                                   );
 
-                                  console.log(array);
-
-                                  console.log(
-                                    "Times",
-                                    array[0],
-                                    doctorStart,
-                                    doctorStartHour,
-                                    doctorStartMin,
-                                    startSpan
-                                  );
+                                  
                                   // let asd = Number(a.split(":")[0]);
                                   // let fgh =
                                   //   Number(a.split(":")[1]) / 60;

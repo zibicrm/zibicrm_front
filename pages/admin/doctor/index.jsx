@@ -3,10 +3,8 @@ import {
   MdAddCircleOutline,
   MdArrowRightAlt,
   MdLoop,
-  MdManageAccounts,
   MdOutlineDeleteSweep,
   MdRemoveRedEye,
-  MdSearch,
 } from "react-icons/md";
 
 import IconBtn from "../../../common/IconBtn";
@@ -27,6 +25,7 @@ import PrimaryBtn from "../../../common/PrimaryBtn";
 import ShowTimes from "../../../Components/ShowTimes";
 import Modal from "../../../Components/Modal";
 import DeleteWarning from "../../../Components/DeleteWarning";
+import { useExcelDownloder } from "react-xls";
 const Doctor = () => {
   const [doctor, setDoctor] = useState(null);
   const [data, setData] = useState(null);
@@ -48,6 +47,15 @@ const Doctor = () => {
   ];
   const router = useRouter();
   const { user, loading } = useAuth();
+
+  const { ExcelDownloder, Type } = useExcelDownloder();
+
+  const [excelData, setExcelData] = useState([]);
+
+  const data1 = {
+    files: excelData,
+  };
+
   const getData = async () => {
     await getAllDoctorService({
       Authorization: "Bearer " + user.token,
@@ -57,6 +65,17 @@ const Doctor = () => {
           toast.error(data.message[0]);
         } else {
           setDoctor(data.result);
+
+          let result = data.result;
+
+          const formattedData = result?.map((item) => ({
+            نام: item?.name,
+            تلفن: item?.tell,
+            مطب: item?.address?.[0]?.title,
+            تخصص: item?.speciality,
+          }));
+
+          setExcelData(formattedData);
         }
         setStatus(0);
       })
@@ -165,6 +184,15 @@ const Doctor = () => {
                   <MdAddCircleOutline />
                 </span>
               </PrimaryBtn>
+            </div>
+            <div className="flex flex-row items-center justify-center rounded-cs   min-w-fit text-primary-900 text-xs h-12">
+              <ExcelDownloder
+                data={{ files: excelData }}
+                filename={"پزشکان"}
+                type={Type.Button}
+              >
+                دانلود اکسل
+              </ExcelDownloder>
             </div>
           </div>
         </div>

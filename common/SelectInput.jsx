@@ -89,7 +89,6 @@ const SelectInput = ({
           getOptionValue={(option) => option[valueOption]}
           defaultValue={defaultValue}
           onChange={(e) => {
-            console.log("changed", e);
             setValue(e), formik.setTouched({ ...formik.touched, [name]: true });
           }}
           value={value}

@@ -19,12 +19,7 @@ import { getAllClinicService } from "../../../../Services/clinicServices";
 import { useRouter } from "next/router";
 import { getEventByDataService } from "../../../../Services/supplierService";
 import Layout from "../../../../Layout/Layout";
-import Modal from "../../../../Components/Modal";
-import AddEvent from "../../../../Components/AddEvent";
-const tabs = [
-  { id: 0, text: "ویزیت" },
-  { id: 1, text: "جراحی" },
-];
+import { useExcelDownloder } from "react-xls";
 
 const tabs2 = [
   { id: 0, text: "ویزیت نشده" },
@@ -34,12 +29,19 @@ const tabs2 = [
 const UnregisteredTreatmentsPage = () => {
   const { user, loading } = useAuth();
   const router = useRouter();
-  const [tab, setTab] = useState(0);
   const [tab2, setTab2] = useState(0);
   const [refer, setRefer] = useState([]);
   const [referStatus, setReferStatus] = useState(0);
   const [add, setAdd] = useState(false);
   // const [data, setData] = useState(null);
+
+   const { ExcelDownloder, Type } = useExcelDownloder();
+  
+    const [excelData, setExcelData] = useState([]);
+  
+    const data1 = {
+      files: excelData,
+    };
 
   const tableTwoHead = [
     { id: 15, title: "شماره پرونده" },
@@ -147,8 +149,24 @@ const UnregisteredTreatmentsPage = () => {
             if (data.status === false) {
               toast.error(data.message[0]);
             } else {
-              console.log(data.result);
               setRefer(data.result);
+              let result = data.result;
+
+              const formattedData = result?.map((item) => ({
+                "شماره پرونده": item?.document?.document_id,
+                نام: item.document && item.document.name,
+                تلفن: item.document && item.document.tell,
+                پزشک: item.doctor && item.doctor.name,
+                مطب: item.clinic && item.clinic.title,
+                کارشناس:
+                  item.supplier &&
+                  item.supplier.first_name + " " + item.supplier.last_name,
+                "زمان مراجعه":
+                  item.VisitTime.slice(0, 5) +
+                  " " +
+                  moment(item.dateOfDay).locale("fa").format("YYYY/M/D"),
+              }));
+              setExcelData(formattedData);
             }
             setReferStatus(0);
           })
@@ -172,6 +190,23 @@ const UnregisteredTreatmentsPage = () => {
               toast.error(data.message[0]);
             } else {
               setRefer(data.result);
+              let result = data.result;
+
+              const formattedData = result?.map((item) => ({
+                "شماره پرونده": item?.document?.document_id,
+                نام: item.document && item.document.name,
+                تلفن: item.document && item.document.tell,
+                پزشک: item.doctor && item.doctor.name,
+                مطب: item.clinic && item.clinic.title,
+                کارشناس:
+                  item.supplier &&
+                  item.supplier.first_name + " " + item.supplier.last_name,
+                "زمان مراجعه":
+                  item.VisitTime.slice(0, 5) +
+                  " " +
+                  moment(item.dateOfDay).locale("fa").format("YYYY/M/D"),
+              }));
+              setExcelData(formattedData);
             }
             setReferStatus(0);
           })
@@ -241,11 +276,21 @@ const UnregisteredTreatmentsPage = () => {
   return (
     <Layout>
       <div className="w-full flex flex-col items-center  rounded-cs">
-      <div className="w-full bg-gray-50  px-6 py-3 flex flex-row items-center justify-between border-b border-primary-900">
-        <div className="w-full flex items-center gap-x-4">
-          <span>{tab2 === 0 ? "ویزیت" : "جراحی"} نشده ها</span>
-          <Tabs options={tabs2} setTab={setTab2} tab={tab2} />
-        </div>
+        <div className="w-full bg-gray-50  px-6 py-3 flex flex-row items-center justify-between border-b border-primary-900">
+          <div className="w-full flex items-center gap-x-4">
+            <span>{tab2 === 0 ? "ویزیت" : "جراحی"} نشده ها</span>
+            <Tabs options={tabs2} setTab={setTab2} tab={tab2} />
+          </div>
+          <div className="flex flex-row items-center justify-center rounded-cs   min-w-fit text-primary-900 text-xs h-12">
+              <ExcelDownloder
+                key={tab2 + JSON.stringify(excelData)}
+                data={data1}
+                filename={tab2 == 1 ? "جراحی نشده" : "ویزیت نشده"}
+                type={Type.Button}
+              >
+                دانلود اکسل
+              </ExcelDownloder>
+            </div>
         </div>
         <div className="w-full max-w-full min-h-[380px]  overflow-y-auto">
           <table className="w-full relative min-w-[600px] md:min-w-fit  max-w-full   ">

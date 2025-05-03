@@ -27,6 +27,7 @@ import PageLoading from "../../../utils/LoadingPage";
 import FilterSelect from "../../../common/FilterSelect";
 import PrimaryBtn from "../../../common/PrimaryBtn";
 import SearchBox from "../../../Components/SearchBox";
+import { useExcelDownloder } from "react-xls";
 const Clinic = () => {
   const [clinic, setClinic] = useState(null);
   const [status, setStatus] = useState(0);
@@ -38,6 +39,15 @@ const Clinic = () => {
     { id: 4, title: "لوکیشن", arrow: false },
     { id: 5, title: "عملیات", arrow: false },
   ];
+
+ const { ExcelDownloder, Type } = useExcelDownloder();
+
+  const [excelData, setExcelData] = useState([]);
+
+  const data1 = {
+    files: excelData,
+  };
+
   const getData = () => {
     getAllClinicService({
       Authorization: "Bearer " + user.token,
@@ -47,6 +57,17 @@ const Clinic = () => {
           toast.error(data.message[0]);
         } else {
           setClinic(data.result);
+
+          let result = data.result;
+
+          const formattedData = result?.map((item) => ({
+            نام: item?.title,
+            'تلفن اول': item?.tell1,
+            'تلفن دوم': item?.tell2,
+            آدرس: item?.address,
+          }));
+
+          setExcelData(formattedData);
         }
         setStatus(0);
       })
@@ -110,7 +131,7 @@ const Clinic = () => {
         <div className="bg-gray-50  px-6 py-3 flex flex-row items-center justify-between border-b border-primary-900">
           <h1 className="text-xl text-gray-900">مطب ها</h1>
         </div>
-        <div className="w-full flex flex-row items-center justify-end px-6 py-4">
+        <div className="w-full flex flex-row items-center justify-end gap-x-4 px-6 py-4">
           <div className="w-32 h-12">
             <PrimaryBtn
               text="افزودن مطب‌"
@@ -121,6 +142,17 @@ const Clinic = () => {
               </span>
             </PrimaryBtn>
           </div>
+
+          <div className="flex flex-row items-center justify-center rounded-cs   min-w-fit text-primary-900 text-xs h-12">
+              <ExcelDownloder
+                key={JSON.stringify(excelData)}
+                data={data1}
+                filename={"مطب ها"}
+                type={Type.Button}
+              >
+                دانلود اکسل
+              </ExcelDownloder>
+            </div>
         </div>
         <div className="w-full max-w-full overflow-x-scroll border-b border-gray-200">
           <table className="w-full  min-w-[600px] md:min-w-fit  max-w-full overflow-x-scroll  ">

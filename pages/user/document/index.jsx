@@ -116,7 +116,6 @@ const UserDocumentPage = () => {
               position: "top-right",
             });
           } else {
-            console.log(data);
             toast.success("پرونده با موفقیت ثبت شد",{
               position: "top-right",
             });

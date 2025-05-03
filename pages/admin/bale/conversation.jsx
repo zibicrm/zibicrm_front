@@ -43,7 +43,6 @@ const BaleConversationPage = () => {
   const [dataLoading, setDataLoading] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
 
-
   useEffect(() => {
     if (listInnerRef && listInnerRef.current && !dataLoading) {
       listInnerRef.current.scrollTo({
@@ -51,7 +50,7 @@ const BaleConversationPage = () => {
         behavior: "smooth",
       });
     }
-  }, [selectId,dataLoading]);
+  }, [selectId, dataLoading]);
 
   const answer = (bale_id, client_id, message) => {
     baleSendMessageService(
@@ -92,11 +91,8 @@ const BaleConversationPage = () => {
           if (data.status === false) {
             toast.error(data.message[0]);
           } else {
-            // setData(data.result[0]);
-            // console.log('DATA',data.result.users);
             setBaleData((prev) => [...data.result.users]);
           }
-          //   setStatus(0);
         })
         .catch((err) => {
           if (err.response && err.response.status === 401) {
@@ -107,7 +103,6 @@ const BaleConversationPage = () => {
           if (err.response) {
             toast.error(err.response.data.message);
           }
-          //   setStatus(0);
         });
     }
   }
@@ -121,7 +116,6 @@ const BaleConversationPage = () => {
   //             toast.error(data.message[0]);
   //           } else {
   //             // setData(data.result[0]);
-  //             // console.log('DATA',data.result.users);
   //             setBaleRequests(data.result.users);
   //             // setBaleData(data.result.users);
   //           }
@@ -242,8 +236,6 @@ const BaleConversationPage = () => {
     }
   };
 
-  // console.log(isSearch);
-
   const onScroll = () => {
     if (listInnerRef.current) {
       const { scrollTop, scrollHeight, clientHeight } = listInnerRef.current;
@@ -342,20 +334,6 @@ const BaleConversationPage = () => {
     return () => clearInterval(interval);
   }, [loading, selectId, currPage, isSearch]);
 
-  // useEffect(()=>{
-
-  //   const interval = setInterval(() => {
-  //    if(isSearch > 0){
-  //     console.log('true');
-  //    } else {
-  //     console.log('false');
-  //    }
-
-  //   },[1000])
-
-  //   return () => clearInterval(interval);
-  // },[isSearch])
-
   useEffect(() => {
     if (user && !loading && queryId) {
       fetcher(queryId);
@@ -380,12 +358,14 @@ const BaleConversationPage = () => {
     }
   };
 
-  if(dataLoading){
-    return <Layout>
-      <div className="h-full flex items-center justify-center">
-        <PageLoading />
+  if (dataLoading) {
+    return (
+      <Layout>
+        <div className="h-full flex items-center justify-center">
+          <PageLoading />
         </div>
-    </Layout>
+      </Layout>
+    );
   }
 
   return (
@@ -418,97 +398,94 @@ const BaleConversationPage = () => {
                 setFilteredData={setFilteredData}
               />
             </div>
-        
-              <div className="w-full flex flex-col items-center gap-6">
-                <div
-                  ref={listInnerRef}
-                  onScroll={onScroll}
-                  className="w-full  flex flex-col items-center gap-0 pt-4 max-h-[calc(100vh-218px)] overflow-y-auto scrollbar-none pl-2"
-                >
-                  {sortNotRead() ? (
-                    sortNotRead().map((item, index) => {
-                      return (
-                        <button
-                          key={item.id}
-                          onClick={() => {
-                            setDataLoading(true);
-                            baleFetcher(item.id);
-                            setSelectId(item.id);
-                          }}
-                          className="w-full"
+
+            <div className="w-full flex flex-col items-center gap-6">
+              <div
+                ref={listInnerRef}
+                onScroll={onScroll}
+                className="w-full  flex flex-col items-center gap-0 pt-4 max-h-[calc(100vh-218px)] overflow-y-auto scrollbar-none pl-2"
+              >
+                {sortNotRead() ? (
+                  sortNotRead().map((item, index) => {
+                    return (
+                      <button
+                        key={item.id}
+                        onClick={() => {
+                          setDataLoading(true);
+                          baleFetcher(item.id);
+                          setSelectId(item.id);
+                        }}
+                        className="w-full"
+                      >
+                        <div
+                          className={`relative flex flex-row items-center justify-between w-full border-b border-primary-50 py-3 px-1 rounded-cs cursor-pointer hover:bg-gray-50 group ${
+                            item.id === selectId && "bg-primary-50"
+                          }`}
                         >
-                          <div
-                            className={`relative flex flex-row items-center justify-between w-full border-b border-primary-50 py-3 px-1 rounded-cs cursor-pointer hover:bg-gray-50 group ${
-                              item.id === selectId && "bg-primary-50"
-                            }`}
-                          >
-                            <div className="flex flex-row gap-2">
-                              <div
-                                className={`w-10 h-10 flex items-center justify-center text-white ${
-                                  index % 4 === 0
-                                    ? `bg-[#FCA5A5]`
-                                    : index % 4 === 1
-                                    ? "bg-[#AAD4C8]"
-                                    : index % 4 === 2
-                                    ? "bg-[#C5BCF3]"
-                                    : "bg-[#FFB902]"
-                                } rounded-full text-2xl`}
-                              >
-                                <BsPersonFill />
-                              </div>
-                              <div className="flex flex-col items-start gap-3 ">
-                                <div className="flex items-center gap-x-4">
-                                  <span className="flex items-center text-gray-900 text-sm text-right">
-                                    {!item.name && !item.sname
-                                      ? "کاربر ناشناس"
-                                      : `${
-                                          item.sname ? item.sname : item.name
-                                        }`}
-                                  </span>
-                                  {item.supplier && (
-                                    <div className="hidden group-hover:block absolute right-[70%] translate-x-[50%] top-[50%] -translate-y-[50%] bg-white text-gray-900 rounded-cs shadow-cs z-50">
-                                      <span className="flex items-center gap-x-1 whitespace-nowrap px-3 py-3 rounded-cs text-xs">
-                                        <span>کارشناس :</span>{" "}
-                                        <h6>
-                                          {item.supplier.first_name &&
-                                            item.supplier.first_name}
-                                        </h6>
-                                        <h6>
-                                          {item.supplier.last_name &&
-                                            item.supplier.last_name}
-                                        </h6>
-                                      </span>
-                                    </div>
-                                  )}
-                                  {/* {item.supplier &&  <span className="flex items-center bg-primary-50 px-3 py-3 rounded-cs text-xs"><span>کارشناس :</span> <h6>{item.supplier.first_name && item.supplier.first_name}</h6><h6>{item.supplier.last_name && item.supplier.last_name}</h6></span>} */}
-                                </div>
-                                <span className="text-sm text-gray-500 text-textGray line-clamp-1">
-                                  {item && item.tell}
-                                </span>
-                              </div>
+                          <div className="flex flex-row gap-2">
+                            <div
+                              className={`w-10 h-10 flex items-center justify-center text-white ${
+                                index % 4 === 0
+                                  ? `bg-[#FCA5A5]`
+                                  : index % 4 === 1
+                                  ? "bg-[#AAD4C8]"
+                                  : index % 4 === 2
+                                  ? "bg-[#C5BCF3]"
+                                  : "bg-[#FFB902]"
+                              } rounded-full text-2xl`}
+                            >
+                              <BsPersonFill />
                             </div>
-                            <div className="flex flex-col items-center gap-2">
-                              <span className="text-xs text-gray-500">
-                                {item && item.last_update}
+                            <div className="flex flex-col items-start gap-3 ">
+                              <div className="flex items-center gap-x-4">
+                                <span className="flex items-center text-gray-900 text-sm text-right">
+                                  {!item.name && !item.sname
+                                    ? "کاربر ناشناس"
+                                    : `${item.sname ? item.sname : item.name}`}
+                                </span>
+                                {item.supplier && (
+                                  <div className="hidden group-hover:block absolute right-[70%] translate-x-[50%] top-[50%] -translate-y-[50%] bg-white text-gray-900 rounded-cs shadow-cs z-50">
+                                    <span className="flex items-center gap-x-1 whitespace-nowrap px-3 py-3 rounded-cs text-xs">
+                                      <span>کارشناس :</span>{" "}
+                                      <h6>
+                                        {item.supplier.first_name &&
+                                          item.supplier.first_name}
+                                      </h6>
+                                      <h6>
+                                        {item.supplier.last_name &&
+                                          item.supplier.last_name}
+                                      </h6>
+                                    </span>
+                                  </div>
+                                )}
+                                {/* {item.supplier &&  <span className="flex items-center bg-primary-50 px-3 py-3 rounded-cs text-xs"><span>کارشناس :</span> <h6>{item.supplier.first_name && item.supplier.first_name}</h6><h6>{item.supplier.last_name && item.supplier.last_name}</h6></span>} */}
+                              </div>
+                              <span className="text-sm text-gray-500 text-textGray line-clamp-1">
+                                {item && item.tell}
                               </span>
-                              {item.messages_not_view > 0 ? (
-                                <div className="w-6 h-6 text-xs rounded-full bg-[#238FF3] pt-1 text-white  flex items-center justify-center">
-                                  {item.messages_not_view}
-                                </div>
-                              ) : null}
                             </div>
                           </div>
-                        </button>
-                      );
-                    })
-                  ) : (
-                    <span className="text-gray-500 text-sm mt-[100px]">
-                      گفت و گویی وجود ندارد
-                    </span>
-                  )}
-                </div>
+                          <div className="flex flex-col items-center gap-2">
+                            <span className="text-xs text-gray-500">
+                              {item && item.last_update}
+                            </span>
+                            {item.messages_not_view > 0 ? (
+                              <div className="w-6 h-6 text-xs rounded-full bg-[#238FF3] pt-1 text-white  flex items-center justify-center">
+                                {item.messages_not_view}
+                              </div>
+                            ) : null}
+                          </div>
+                        </div>
+                      </button>
+                    );
+                  })
+                ) : (
+                  <span className="text-gray-500 text-sm mt-[100px]">
+                    گفت و گویی وجود ندارد
+                  </span>
+                )}
               </div>
-         
+            </div>
           </div>
           <div
             ref={messageRef}

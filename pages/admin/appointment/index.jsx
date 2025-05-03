@@ -49,6 +49,7 @@ import {
 import LoadingBtn from "../../../utils/LoadingBtn";
 import Link from "next/link";
 import { useRef } from "react";
+import { useExcelDownloder } from "react-xls";
 const Appointment = () => {
   const [appointment, setAppointment] = useState(null);
   const [filterData, setFilteredData] = useState(null);
@@ -62,6 +63,14 @@ const Appointment = () => {
   const [description, setDescription] = useState("");
   const [searchStatus, setSearchStatus] = useState(0);
   const pageRef = useRef(null);
+
+  const { ExcelDownloder, Type } = useExcelDownloder();
+
+  const [excelData, setExcelData] = useState([]);
+
+  const data1 = {
+    files: excelData,
+  };
 
   const [doctor, setDoctor] = useState(null);
   const [page, setPage] = useState(1);
@@ -117,6 +126,31 @@ const Appointment = () => {
           } else {
             setAppointment(data.result);
             setFilteredData(data.result);
+
+            let result = data.result;
+
+            const formattedData = result?.map((item) => ({
+              نام: item.document && item.document.name,
+              تلفن: item.document && item.document.tell,
+              "زمان مراجعه":
+                item.VisitTime.slice(0, 5) |
+                moment(item.dateOfDay).locale("fa").format(" YYYY/MM/DD"),
+              مطب:
+                allClinic &&
+                allClinic.length &&
+                allClinic.filter(
+                  (i) => Number(i.id) === Number(item.clinic_id)
+                )[0]?.title,
+              "پزشک معالج": item.doctor && item.doctor.name,
+              کارشناس:
+                item.supplier &&
+                item.supplier.first_name + " " + item.supplier.last_name,
+              "تاریخ ثبت": moment(item.created_at)
+                .locale("fa")
+                .format("YYYY/MM/DD"),
+              وضعیت: item.status === 1 ? "ثبت شده" : "کنسل شده",
+            }));
+            setExcelData(formattedData);
           }
           setStatus(0);
         })
@@ -151,6 +185,31 @@ const Appointment = () => {
           } else {
             setAppointment(data.result);
             setFilteredData(data.result);
+            let result = data.result;
+
+            const formattedData = result?.map((item) => ({
+              نام: item.document && item.document.name,
+              تلفن: item.document && item.document.tell,
+              "زمان مراجعه":
+                item.VisitTime.slice(0, 5) |
+                moment(item.dateOfDay).locale("fa").format(" YYYY/MM/DD"),
+              مطب:
+                allClinic &&
+                allClinic.length &&
+                allClinic.filter(
+                  (i) => Number(i.id) === Number(item.clinic_id)
+                )[0]?.title,
+              "پزشک معالج": item.doctor && item.doctor.name,
+              کارشناس:
+                item.supplier &&
+                item.supplier.first_name + " " + item.supplier.last_name,
+              "تاریخ ثبت": moment(item.created_at)
+                .locale("fa")
+                .format("YYYY/MM/DD"),
+              وضعیت: item.status === 1 ? "ثبت شده" : "کنسل شده",
+              بیعانه: item?.deposit,
+            }));
+            setExcelData(formattedData);
           }
           setStatus(0);
         })
@@ -187,6 +246,32 @@ const Appointment = () => {
           } else {
             setAppointment(data.result);
             setFilteredData(data.result);
+
+            let result = data.result;
+
+            const formattedData = result?.map((item) => ({
+              نام: item.document && item.document.name,
+              تلفن: item.document && item.document.tell,
+              "زمان مراجعه":
+                item.VisitTime.slice(0, 5) |
+                moment(item.dateOfDay).locale("fa").format(" YYYY/MM/DD"),
+              مطب:
+                allClinic &&
+                allClinic.length &&
+                allClinic.filter(
+                  (i) => Number(i.id) === Number(item.clinic_id)
+                )[0]?.title,
+              "پزشک معالج": item.doctor && item.doctor.name,
+              کارشناس:
+                item.supplier &&
+                item.supplier.first_name + " " + item.supplier.last_name,
+              "تاریخ ثبت": moment(item.created_at)
+                .locale("fa")
+                .format("YYYY/MM/DD"),
+              وضعیت: item.status === 1 ? "ثبت شده" : "کنسل شده",
+            }));
+
+            setExcelData(formattedData);
           }
           setStatus(0);
         })
@@ -219,6 +304,32 @@ const Appointment = () => {
           } else {
             setAppointment(data.result);
             setFilteredData(data.result);
+
+            let result = data.result;
+
+            const formattedData = result?.map((item) => ({
+              نام: item.document && item.document.name,
+              تلفن: item.document && item.document.tell,
+              "زمان مراجعه":
+                item.VisitTime.slice(0, 5) |
+                moment(item.dateOfDay).locale("fa").format(" YYYY/MM/DD"),
+              مطب:
+                allClinic &&
+                allClinic.length &&
+                allClinic.filter(
+                  (i) => Number(i.id) === Number(item.clinic_id)
+                )[0]?.title,
+              "پزشک معالج": item.doctor && item.doctor.name,
+              کارشناس:
+                item.supplier &&
+                item.supplier.first_name + " " + item.supplier.last_name,
+              "تاریخ ثبت": moment(item.created_at)
+                .locale("fa")
+                .format("YYYY/MM/DD"),
+              وضعیت: item.status === 1 ? "ثبت شده" : "کنسل شده",
+              بیعانه: item?.deposit,
+            }));
+            setExcelData(formattedData);
           }
           setStatus(0);
         })
@@ -423,6 +534,7 @@ const Appointment = () => {
   if (user && user.user.rule !== 2) return <Error statusCode={404} />;
   if (!appointment) return <PageLoading />;
 
+
   return (
     <Layout>
       <div ref={pageRef} className="h-full w-full ">
@@ -535,6 +647,17 @@ const Appointment = () => {
                   </Menu.Items>
                 </Transition>
               </Menu>
+            </div>
+
+            <div className="flex flex-row items-center justify-center rounded-cs   min-w-fit text-primary-900 text-xs h-12">
+              <ExcelDownloder
+                key={tab + JSON.stringify(excelData)}
+                data={{ files: excelData }}
+                filename={tab == 1 ? "نوبت جراحی" : "نوبت ویزیت"}
+                type={Type.Button}
+              >
+                دانلود اکسل
+              </ExcelDownloder>
             </div>
           </div>
         </div>

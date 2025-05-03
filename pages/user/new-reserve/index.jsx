@@ -21,13 +21,16 @@ import { toast } from "react-toastify";
 import moment from "jalali-moment";
 import PageLoading from "../../../utils/LoadingPage";
 import { useRouter } from "next/router";
-import { usePatientAuth, usePatientAuthActions } from "../../../Provider/PatientAuthProvider";
+import {
+  usePatientAuth,
+  usePatientAuthActions,
+} from "../../../Provider/PatientAuthProvider";
 import Image from "next/image";
 import { ImageBuilding } from "../../../assets/Images";
 
 const NewReservePage = () => {
-  const {user,loading} = usePatientAuth()
-  const patientDispatcher =  usePatientAuthActions()
+  const { user, loading } = usePatientAuth();
+  const patientDispatcher = usePatientAuthActions();
   const [select, setSelect] = useState(null);
   const [days, setDays] = useState([]);
   const [allClinic, setAllClinic] = useState([]);
@@ -40,21 +43,13 @@ const NewReservePage = () => {
   const userDispatch = useAuthActions();
   const [selectShow, setSelectShow] = useState(null);
   const router = useRouter();
-  const [clinic,setClinic] = useState(null)
-  const [doctor,setDoctor] = useState(null)
-  const [service,setService] = useState(null)
-  const [formSubmitted,setFormSubmitted] = useState(false)
-
-
-  console.log('VISITTIME',select);
-  console.log('DAY');
-  console.log('DATE');
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
   let s = moment.now();
   let nowDay = moment(s).format("YYYY/MM/DD");
 
   const validationSchema = yup.object({
-    clinic_id:yup.string().required('مطب را انتخاب کنید.')
+    clinic_id: yup.string().required("مطب را انتخاب کنید."),
     // io_call: yup.string().required("نوع تماس را وارد کنید"),
     // event_type_id: yup.string().required("وضعیت را وارد کنید"),
     // deposit: yup.number().typeError("عدد وارد کنید"),
@@ -82,7 +77,7 @@ const NewReservePage = () => {
     initialValues,
     onSubmit: (values) => {
       formik.setStatus(1);
-      setFormSubmitted(true)
+      setFormSubmitted(true);
 
       setNewReserveVisit(
         {
@@ -100,12 +95,11 @@ const NewReservePage = () => {
       )
         .then(({ data }) => {
           if (data.status === false) {
-            toast.error(data.message[0],{
+            toast.error(data.message[0], {
               position: "top-right",
             });
           } else {
-            console.log("new visit");
-            toast.success("نوبت ویزیت با موفقیت رزرو شد",{
+            toast.success("نوبت ویزیت با موفقیت رزرو شد", {
               position: "top-right",
             });
             // setReserve(null);
@@ -123,7 +117,7 @@ const NewReservePage = () => {
             });
           }
           if (err.response) {
-            toast.error(err.response.data.message,{
+            toast.error(err.response.data.message, {
               position: "top-right",
             });
           }
@@ -172,7 +166,7 @@ const NewReservePage = () => {
       })
         .then(({ data }) => {
           if (data.status === false) {
-            toast.error(data.message[0],{
+            toast.error(data.message[0], {
               position: "top-right",
             });
             setAllClinic([]);
@@ -200,7 +194,7 @@ const NewReservePage = () => {
       })
         .then(({ data }) => {
           if (data.status === false) {
-            toast.error(data.message[0],{
+            toast.error(data.message[0], {
               position: "top-right",
             });
             setAllDoctor([]);
@@ -223,13 +217,12 @@ const NewReservePage = () => {
 
   useEffect(() => {
     if (user && user.token && formik.values.clinic_id) {
-      
       getServiceByClinic(formik.values.clinic_id, {
         Authorization: "Bearer " + user.token,
       })
         .then(({ data }) => {
           if (data.status === false) {
-            toast.error(data.message[0],{
+            toast.error(data.message[0], {
               position: "top-right",
             });
             setAllService([]);
@@ -268,7 +261,7 @@ const NewReservePage = () => {
       )
         .then(({ data }) => {
           if (data.status === false) {
-            toast.error(data.message[0],{
+            toast.error(data.message[0], {
               position: "top-right",
             });
           } else {
@@ -341,7 +334,7 @@ const NewReservePage = () => {
       )
         .then(({ data }) => {
           if (data.status === false) {
-            toast.error(data.message[0],{
+            toast.error(data.message[0], {
               position: "top-right",
             });
           } else {
@@ -394,24 +387,25 @@ const NewReservePage = () => {
     // }
   }, [select]);
 
-
   useEffect(() => {
     if (!loading && !user && !user?.token) {
       router.push("/user/user-login");
     }
   }, []);
 
-  if(loading){
-    return <PageLoading />
+  if (loading) {
+    return <PageLoading />;
   }
 
   return (
     <LayoutUser>
       <div className="md:mt-8">
-        <h1 className="text-gray-900 md:font-bold md:text-xl md:mt-8 ">ثبت نوبت جدید</h1>
+        <h1 className="text-gray-900 md:font-bold md:text-xl md:mt-8 ">
+          ثبت نوبت جدید
+        </h1>
         <div className="mt-24 flex flex-col items-center justify-center ">
           <div className="relative items-center justify-center w-[196px] h-[108px] md:w-[457px] md:h-[257px] ">
-            <Image src={ImageBuilding} alt=""  layout="fill"/>
+            <Image src={ImageBuilding} alt="" layout="fill" />
           </div>
           <p className="text-sm md:text-base text-gray-500 text-center mt-6 md:mt-8">
             این صفحه در دست طراحی می باشد

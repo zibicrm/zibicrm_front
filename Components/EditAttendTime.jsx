@@ -67,7 +67,6 @@ const EditAttendTime = ({
     { id: 7, value: "Friday", label: "جمعه" },
   ];
 
-  console.log('select',selected);
 
   const TimeHandler = (e) => {
     let convertedTime = moment(e, "hh:mm:ss A").format("HH:mm");
@@ -154,7 +153,6 @@ const EditAttendTime = ({
     // let filter = formik.values[selected].filter((item) => item.id !== id);
     // formik.setFieldValue([selected], filter);
     if(formik.values[selected] && formik.values[selected].length > 1){
-      console.log('test 1',formik.values[selected].length);
       deleteTimeService(deleteAlert, {
         Authorization: "Bearer " + user.token,
       })
@@ -194,7 +192,6 @@ const EditAttendTime = ({
         });
     } else {
       let filter = doctorTimes.filter((e) => e.day === selected)[0];
-      // console.log('filetr',filetr);
       deleteTimeService(deleteAlert, {
         Authorization: "Bearer " + user.token,
       })

@@ -51,12 +51,6 @@ const tabs = [
   { id: 1, text: "نوبت ویزیت" },
 ];
 
-
-// console.log(surgeryAppointmentInfo);
-// console.log(VisitAppointmentInfo);
-
-
-
 const TimelineAppointmentsPage = () => {
   const [tab, setTab] = useState(0);
   const [datePickerModal, setDatePickerModal] = useState(false);
@@ -92,7 +86,7 @@ const TimelineAppointmentsPage = () => {
   const { loading, user } = useAuth();
   const [surgeryAppointments, setSurgeryAppointments] = useState(null);
   const [getInfoLoading, setGetInfoLoading] = useState(false);
-  const [reload,setReload] = useState(false)
+  const [reload, setReload] = useState(false);
 
   const router = useRouter();
   const formattedDate = `${moment(currentDate.date, "YY/MM/DDDD").format(
@@ -105,7 +99,6 @@ const TimelineAppointmentsPage = () => {
   const ffa = moment(currentDate.date).format("YYYY-MM-DD");
   const dd = moment(currentDate.date).format("dddd");
 
-console.log(currentDate);
 
   function convertNumberToFarsiDayOfWeek(date) {
     switch (date) {
@@ -384,8 +377,7 @@ console.log(currentDate);
   };
 
   const setReceptionHandler = async () => {
-
-    if(tab === 0) {
+    if (tab === 0) {
       appointmentSurgeryService(
         {
           appointment_surgery_id: documentId,
@@ -399,11 +391,11 @@ console.log(currentDate);
             toast.error(res.data.message[0]);
           } else {
             toast.success(res.data.result[0]);
-          setReload(!reload)
+            setReload(!reload);
             router.push({ pathname: window.location.href }, undefined, {
               scroll: false,
             });
-           
+
             // setSurgeryAppointmentInfo(null);
           }
         })
@@ -431,7 +423,7 @@ console.log(currentDate);
             toast.error(res.data.message[0]);
           } else {
             toast.success(res.data.result[0]);
-            setReload(!reload)
+            setReload(!reload);
             router.push({ pathname: window.location.href }, undefined, {
               scroll: false,
             });
@@ -449,8 +441,6 @@ console.log(currentDate);
           }
         });
     }
-
-   
   };
 
   const cancelAppointment = () => {
@@ -471,7 +461,7 @@ console.log(currentDate);
           } else {
             toast.success(res.data.result[0]);
             getEvent(id);
-            setReload(!reload)
+            setReload(!reload);
             router.push({ pathname: window.location.href }, undefined, {
               scroll: false,
             });
@@ -510,7 +500,7 @@ console.log(currentDate);
           } else {
             toast.success(res.data.result[0]);
             getEvent(id);
-            setReload(!reload)
+            setReload(!reload);
             router.push({ pathname: window.location.href }, undefined, {
               scroll: false,
             });
@@ -558,7 +548,6 @@ console.log(currentDate);
       formik.setStatus(1);
 
       if (tab === 1) {
-     
         setNewReserveVisit(
           {
             dateOfDay: formattedDate,
@@ -577,14 +566,12 @@ console.log(currentDate);
             if (data.status === false) {
               toast.error(data.message[0]);
             } else {
-              console.log('new visit');
               toast.success("نوبت ویزیت با موفقیت رزرو شد");
               setReserve(null);
-              setReload(!reload)
+              setReload(!reload);
               router.push({ pathname: window.location.href }, undefined, {
                 scroll: false,
               });
-             
             }
             formik.setStatus(0);
           })
@@ -621,12 +608,11 @@ console.log(currentDate);
               toast.success("نوبت جراحی با موفقیت رزرو شد");
               setReserve(null);
               // new request
-              setReload(!reload)
+              setReload(!reload);
               router.push({ pathname: window.location.href }, undefined, {
                 scroll: false,
               });
               // router.push('/admin/timeline-appointments/')
-              
             }
             formik.setStatus(0);
           })
@@ -642,8 +628,6 @@ console.log(currentDate);
             formik.setStatus(0);
           });
       }
-
-  
     },
     // validationSchema,
     validateOnMount: true,
@@ -761,7 +745,7 @@ console.log(currentDate);
     if (user && user.token && tab === 0) {
       getDoctorsSurgeryAppointments();
     }
-  }, [loading, currentDate, tab,reload]);
+  }, [loading, currentDate, tab, reload]);
 
   useEffect(() => {
     if (user && user.token && tab === 0) {
@@ -773,13 +757,11 @@ console.log(currentDate);
     }
   }, [loading, currentDate, tab]);
 
-
-
   useEffect(() => {
     if (user && user.token && tab === 1) {
       getDoctorsVisitAppointments();
     }
-  }, [loading, currentDate, tab,reload]);
+  }, [loading, currentDate, tab, reload]);
 
   useEffect(() => {
     if (user && user.token && tab === 1) {
@@ -790,7 +772,6 @@ console.log(currentDate);
       return () => clearInterval(intervalVisit);
     }
   }, [loading, currentDate, tab]);
-
 
   const convert = (date, format = value.format) => {
     let object = { date, format };
@@ -960,37 +941,73 @@ console.log(currentDate);
             <div className=" bg-white w-[359px] h-[390px] px-4 py-6 flex flex-col rounded-cs">
               <h1 className="text-sm ">
                 کارشناس :
-                {tab === 0 ? (`${surgeryAppointmentInfo.supplier.first_name} ${surgeryAppointmentInfo.supplier.last_name}`) : (`${visitAppointmentInfo.supplier.first_name} ${visitAppointmentInfo.supplier.last_name}`)}
+                {tab === 0
+                  ? `${surgeryAppointmentInfo.supplier.first_name} ${surgeryAppointmentInfo.supplier.last_name}`
+                  : `${visitAppointmentInfo.supplier.first_name} ${visitAppointmentInfo.supplier.last_name}`}
               </h1>
               <div className="w-full h-full border rounded-xl overflow-hidden mb-4 mt-4">
                 <table className="w-full h-full rounded-xl text-xs text-center">
                   <tr className="border-b">
                     <td className="border-l py-2">نام بیمار</td>
-                    <td>{tab === 0 ? surgeryAppointmentInfo.document.name : visitAppointmentInfo.document.name}</td>
+                    <td>
+                      {tab === 0
+                        ? surgeryAppointmentInfo.document.name
+                        : visitAppointmentInfo.document.name}
+                    </td>
                   </tr>
                   <tr className="border-b">
                     <td className="border-l py-2">مطب</td>
-                    <td>{tab === 0 ? surgeryAppointmentInfo.clinic.title : visitAppointmentInfo.clinic.title}</td>
+                    <td>
+                      {tab === 0
+                        ? surgeryAppointmentInfo.clinic.title
+                        : visitAppointmentInfo.clinic.title}
+                    </td>
                   </tr>
                   <tr className="border-b">
                     <td className="border-l py-2">پزشک</td>
-                    <td>{tab === 0 ? surgeryAppointmentInfo.doctor.name : visitAppointmentInfo.doctor.name}</td>
+                    <td>
+                      {tab === 0
+                        ? surgeryAppointmentInfo.doctor.name
+                        : visitAppointmentInfo.doctor.name}
+                    </td>
                   </tr>
                   <tr className="border-b">
                     <td className="border-l py-2">روز</td>
-                    <td>{convertDayOfWeek(tab === 0 ? surgeryAppointmentInfo.day : visitAppointmentInfo.day)}</td>
+                    <td>
+                      {convertDayOfWeek(
+                        tab === 0
+                          ? surgeryAppointmentInfo.day
+                          : visitAppointmentInfo.day
+                      )}
+                    </td>
                   </tr>
                   <tr className="border-b">
                     <td className="border-l py-2">ساعت</td>
-                    <td>{tab === 0 ? surgeryAppointmentInfo.VisitTime : visitAppointmentInfo.VisitTime}</td>
+                    <td>
+                      {tab === 0
+                        ? surgeryAppointmentInfo.VisitTime
+                        : visitAppointmentInfo.VisitTime}
+                    </td>
                   </tr>
                   <tr className="border-b">
                     <td className="border-l py-2">خدمات</td>
-                    <td>{tab === 0 ? surgeryAppointmentInfo.service.title : visitAppointmentInfo.service.title}</td>
+                    <td>
+                      {tab === 0
+                        ? surgeryAppointmentInfo.service.title
+                        : visitAppointmentInfo.service.title}
+                    </td>
                   </tr>
                   <tr className="">
                     <td className="border-l py-2">نوع نوبت</td>
-                    <td>{tab === 0 ? (surgeryAppointmentInfo.vip ? "ویژه" : "معمولی") : (visitAppointmentInfo.vip ? "ویژه" : "معمولی")}</td>
+                    <td>
+                      {tab === 0
+                        ? surgeryAppointmentInfo.vip
+                          ? "ویژه"
+                          : "معمولی"
+                        : visitAppointmentInfo.vip
+                        ? "ویژه"
+                        : "معمولی"}
+                    </td>
                   </tr>
                 </table>
               </div>
@@ -1009,7 +1026,7 @@ console.log(currentDate);
                       text="پذیرش شد"
                       onClick={() => {
                         setReceptionHandler();
-                        setDocumentId(null)
+                        setDocumentId(null);
                       }}
                     />
                   </div>

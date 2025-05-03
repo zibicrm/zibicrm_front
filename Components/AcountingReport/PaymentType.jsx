@@ -61,7 +61,6 @@ const PaymentType = ({}) => {
     );
   };
   const getPaymentType = (firstLoad) => {
-    console.log("getpaymentdata calendar change");
     //send calendardata to api 
     // reportSupplierCellPhoneService(
     //   {

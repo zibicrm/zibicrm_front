@@ -1,6 +1,5 @@
 import { useRouter } from "next/router";
 import {
-  MdArrowDropDown,
   MdArrowForward,
   MdArrowRightAlt,
   MdLoop,
@@ -15,19 +14,13 @@ import { useAuth, useAuthActions } from "../../../Provider/AuthProvider";
 import CountSelect from "../../../Components/CountSelect";
 import { toast } from "react-toastify";
 import Pagination from "../../../Components/Pagination";
-import {
-  getFinanceRecordService,
-  rollbackPriceService,
-} from "../../../Services/recordServices";
 import Error from "next/error";
-import PageLoading from "../../../utils/LoadingPage";
 import PrimaryBtn from "../../../common/PrimaryBtn";
 import Modal from "../../../Components/Modal";
 import Link from "next/link";
 import Input from "../../../common/Input";
 import OutlineBtn from "../../../common/OutlineBtn";
 import { CloseBtn } from "../../../common/CloseBtn";
-import { Disclosure, Menu, Popover } from "@headlessui/react";
 import moment from "jalali-moment";
 import {
   getChecksService,
@@ -41,6 +34,7 @@ import Tabs from "../../../Components/Tabs";
 import SelectInput from "../../../common/SelectInput";
 import { CurrencyNum } from "../../../hooks/CurrencyNum";
 import { useRef } from "react";
+import { useExcelDownloder } from "react-xls";
 const Finance = () => {
   const [records, setRecords] = useState(null);
   const [searchStatus, setSearchStatus] = useState(0);
@@ -53,6 +47,14 @@ const Finance = () => {
   const [page, setPage] = useState(1);
   const [tab, setTab] = useState(0);
   const [popover, setPopover] = useState(false);
+
+  const { ExcelDownloder, Type } = useExcelDownloder();
+
+  const [excelData, setExcelData] = useState([]);
+
+  const data1 = {
+    files: excelData,
+  };
 
   const head = [
     { id: 2, title: "سریال چک" },
@@ -85,6 +87,28 @@ const Finance = () => {
           } else {
             setRecords(data.result);
             setFilteredData(data.result);
+
+            let result = data.result.record;
+
+            const formattedData = result?.map((item) => ({
+              "سریال چک": item?.serial,
+              مبلغ: CurrencyNum.format(item.amount),
+              تاریخ: moment(item.date).locale("fa").format("YYYY/MM/DD"),
+              "نام بیمار": item?.document?.name,
+              "شماره تماس": item?.document?.tell,
+              وضعیت:
+                item.status === 0
+                  ? "اسناد دریافتی"
+                  : item.status === 1
+                  ? "وصول شده"
+                  : item.status === 2
+                  ? "برگشتی"
+                  : item.status === 3
+                  ? "خرج شده"
+                  : "عودت شده",
+            }));
+
+            setExcelData(formattedData);
           }
           setStatus(0);
         })
@@ -248,6 +272,7 @@ const Finance = () => {
   };
   if (user && user.user.rule !== 2) return <Error statusCode={404} />;
   //   if (!records) return <PageLoading />;
+
   return (
     <Layout>
       <div ref={pageRef} className="z-0">
@@ -289,6 +314,16 @@ const Finance = () => {
               />
             </div>
             <CountSelect setCount={setCount} />
+            <div className="flex flex-row items-center justify-center rounded-cs   min-w-fit text-primary-900 text-xs h-12">
+              <ExcelDownloder
+                key={JSON.stringify(excelData)}
+                data={data1}
+                filename={"چک ها"}
+                type={Type.Button}
+              >
+                دانلود اکسل
+              </ExcelDownloder>
+            </div>
             {/* <div className="w-24 h-12 ">
               <PrimaryBtn text="ثبت پرداختی" onClick={() => setShow(!show)} />
             </div> */}

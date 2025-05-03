@@ -53,9 +53,8 @@ const Conversation = () => {
   const [page, setPage] = useState(1);
   const messageRef = useRef();
   const [isSearch, setIsSearch] = useState(0);
-  const [dataLoading,setDataLoading] = useState(false)
+  const [dataLoading, setDataLoading] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
-
 
   useEffect(() => {
     if (listInnerRef && listInnerRef.current && !dataLoading) {
@@ -64,7 +63,7 @@ const Conversation = () => {
         behavior: "smooth",
       });
     }
-  }, [selectId,dataLoading]);
+  }, [selectId, dataLoading]);
 
   const answer = (bale_id, client_id, message) => {
     baleSendMessageService(
@@ -107,8 +106,6 @@ const Conversation = () => {
           if (data.status === false) {
             toast.error(data.message[0]);
           } else {
-            // setData(data.result[0]);
-            // console.log('DATA',data.result.users);
             setBaleData((prev) => [...data.result.users]);
           }
           //   setStatus(0);
@@ -135,8 +132,6 @@ const Conversation = () => {
           if (data.status === false) {
             toast.error(data.message[0]);
           } else {
-            // setData(data.result[0]);
-            // console.log('DATA',data.result.users);
             setBaleRequests(data.result.users);
             // setBaleData(data.result.users);
           }
@@ -163,7 +158,7 @@ const Conversation = () => {
         { count: 100, page: 1, user_id: id },
         { Authorization: "Bearer " + user.token }
       ).then((res) => {
-        setDataLoading(false)
+        setDataLoading(false);
         res.data.result && setBaleMessages(res.data.result.conversation);
         // data.result && setNow(data.result[0].length);
       });
@@ -245,7 +240,6 @@ const Conversation = () => {
   const onScrollMessages = () => {
     if (messageRef.current) {
       const { scrollTop, scrollHeight, clientHeight } = messageRef.current;
-      console.log(scrollTop, scrollHeight, clientHeight);
       if (scrollTop + clientHeight === scrollHeight) {
         setPage(page + 1);
       }
@@ -434,14 +428,15 @@ const Conversation = () => {
     }
   };
 
-
-  if(dataLoading){
-    return <Layout>
-      <div className="h-full flex items-center justify-center">
-        {/* <LoadingBtn /> */}
-        <PageLoading />
+  if (dataLoading) {
+    return (
+      <Layout>
+        <div className="h-full flex items-center justify-center">
+          {/* <LoadingBtn /> */}
+          <PageLoading />
         </div>
-    </Layout>
+      </Layout>
+    );
   }
 
   // useEffect(() => {
@@ -491,7 +486,7 @@ const Conversation = () => {
                           onClick={() => {
                             baleFetcher(item.id);
                             setSelectId(item.id);
-                            setDataLoading(true)
+                            setDataLoading(true);
                           }}
                           className="w-full"
                         >
@@ -573,7 +568,7 @@ const Conversation = () => {
                         onClick={() => {
                           baleFetcher(item.id);
                           setSelectId(item.id);
-                          setDataLoading(true)
+                          setDataLoading(true);
                         }}
                         className="w-full"
                       >

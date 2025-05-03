@@ -1,21 +1,17 @@
 import { useRouter } from "next/router";
 import {
-  MdAddCircleOutline,
   MdArrowRightAlt,
-  MdCalendarToday,
   MdCompareArrows,
   MdLoop,
-  MdOutlineCancel,
   MdOutlineDeleteSweep,
   MdRemoveRedEye,
 } from "react-icons/md";
 
 import IconBtn from "../../../common/IconBtn";
 import Layout from "../../../Layout/Layout";
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth, useAuthActions } from "../../../Provider/AuthProvider";
 import { toast } from "react-toastify";
-import Pagination from "../../../Components/Pagination";
 import {
   ClinicRecordService,
   deleteRecordService,
@@ -24,39 +20,16 @@ import {
 import Modal from "../../../Components/Modal";
 import { CloseBtn } from "../../../common/CloseBtn";
 import PrimaryBtn from "../../../common/PrimaryBtn";
-import DeleteWarning from "../../../Components/DeleteWarning";
 import Error from "next/error";
 import PageLoading from "../../../utils/LoadingPage";
-import FilterSelect from "../../../common/FilterSelect";
-import Tabs from "../../../Components/Tabs";
 import moment from "jalali-moment";
-import { getDoctorByClinicService } from "../../../Services/doctorServices";
-import { getAllClinicService } from "../../../Services/clinicServices";
-import {
-  getAppointmentSurgeryUserService,
-  getAppointmentUserService,
-} from "../../../Services/supplierService";
-import { Menu, Transition } from "@headlessui/react";
-import SearchBox from "../../../Components/SearchBox";
-import {
-  cancelAppointmentSurgeryService,
-  getAllAppointmentSurgeryService,
-  seacrhAppointmentSurgery,
-  searchAppointmentSurgeryService,
-} from "../../../Services/appointmentSurgeryService";
-import {
-  cancelAppointmentService,
-  getAllAppointmentService,
-  seacrhAppointment,
-  searchAppointmentService,
-} from "../../../Services/appointmentService";
-import LoadingBtn from "../../../utils/LoadingBtn";
+
 import Link from "next/link";
 import SelectInput from "../../../common/SelectInput";
 import { getAllUsersService } from "../../../Services/userServies";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { data } from "autoprefixer";
+import { useExcelDownloder } from "react-xls";
 
 const Appointment = () => {
   const [records, setRecords] = useState(null);
@@ -74,6 +47,15 @@ const Appointment = () => {
   const router = useRouter();
   const { user, loading } = useAuth();
   const userDispatch = useAuthActions();
+
+  const { ExcelDownloder, Type } = useExcelDownloder();
+
+  const [excelData, setExcelData] = useState([]);
+
+  const data1 = {
+    files: excelData,
+  };
+
   const getData = async () => {
     setStatus(1);
     await ClinicRecordService({
@@ -85,6 +67,20 @@ const Appointment = () => {
           setRecords([]);
         } else {
           setRecords(data.result);
+          let result = data.result;
+
+          const formattedData = result?.map((item) => ({
+            "شماره پرونده": item?.document_id,
+            نام: item?.name,
+            تلفن: item?.tell,
+            کارشناس:
+              item.user && item.user.first_name + " " + item.user.last_name,
+            "تاریخ ثبت": moment(item.created_at)
+              .locale("fa")
+              .format("YYYY/MM/DD"),
+          }));
+
+          setExcelData(formattedData);
         }
         setStatus(0);
       })
@@ -232,6 +228,15 @@ const Appointment = () => {
                   getData();
                 }}
               />
+            </div>
+            <div className="flex flex-row items-center justify-center rounded-cs   min-w-fit text-primary-900 text-xs h-12">
+              <ExcelDownloder
+                data={{ files: excelData }}
+                filename={"پرونده های مطب"}
+                type={Type.Button}
+              >
+                دانلود اکسل
+              </ExcelDownloder>
             </div>
           </div>
         </div>

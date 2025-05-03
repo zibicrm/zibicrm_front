@@ -291,7 +291,6 @@ const VisitTimelineCalendar = ({
                                   let endBreak1 = moment('13:45:00',"hh:mm")
                                   let startBreak2 = moment('16:59:00',"hh:mm")
                                   let endBreak2 = moment('17:45:00',"hh:mm")
-                                //  console.log('every 12345',moment(a,"hh:mm"),moment(a,"hh:mm").isBetween(startBreak,endBreak));
                                   let doctorStart = Number(a.split(":")[0]);
                                   let doctorStartSecond = Number(
                                     a.split(":")[1]
@@ -313,7 +312,6 @@ const VisitTimelineCalendar = ({
                                   )
                                     // .add(i * appointment_time, "minutes")
                                     .format("HH:mm");
-                                    console.log('Start Date',startdate);
                                   let ff = doctor.appointment.find(
                                     (s) => s.VisitTime === a
                                   );

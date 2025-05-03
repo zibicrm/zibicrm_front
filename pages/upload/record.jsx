@@ -51,7 +51,6 @@ const Check = ({}) => {
       formik.setStatus(1);
       formData.append("image", values.image);
       formData.append("document_id", values.document_id);
-      console.log('form data',formData.getAll('image'));
       uploadRecordImageService(formData, {
         Authorization: "Bearer " + user.token,
       })
@@ -88,8 +87,6 @@ const Check = ({}) => {
       setImageCheck(URL.createObjectURL(file));
     }
   };
-
-
 
   return (
     <main

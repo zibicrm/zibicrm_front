@@ -50,7 +50,6 @@ const IntroducePatientPage = () => {
             position: "top-right",
           });
         } else {
-          console.log(data);
           setIntroductionList(data.result);
         }
         formik.setStatus(0);
@@ -74,7 +73,7 @@ const IntroducePatientPage = () => {
     tell: yup
       .string()
       .required("شماره تلفن مراجعه کننده را وارد کنید")
-      .matches(/^[0][9][0-9]{9}$/,"فرمت شماره تلفن صحیح نمی باشد"),
+      .matches(/^[0][9][0-9]{9}$/, "فرمت شماره تلفن صحیح نمی باشد"),
     name: yup.string().required("نام مراجعه کننده را وارد کنید").nullable(),
   });
   const initialValues = {
@@ -104,7 +103,7 @@ const IntroducePatientPage = () => {
               scroll: false,
             });
             setReload(!reload);
-            console.log("reload");
+
             toast.success("بیمار با موفقیت اضافه شد", {
               position: "top-right",
             });

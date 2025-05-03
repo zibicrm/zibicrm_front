@@ -30,6 +30,7 @@ import AddEvent from "../../../Components/AddEvent";
 import SearchBox from "../../../Components/SearchBox";
 import Link from "next/link";
 import { getAllPatientStatusService } from "../../../Services/patientStatusServices";
+import { useExcelDownloder } from "react-xls";
 const Record = () => {
   const [records, setRecords] = useState(null);
   const [statusList, setStatusList] = useState(null);
@@ -53,6 +54,15 @@ const Record = () => {
   const router = useRouter();
   const { user, loading } = useAuth();
   const userDispatch = useAuthActions();
+
+  const { ExcelDownloder, Type } = useExcelDownloder();
+
+  const [excelData, setExcelData] = useState([]);
+
+  const data1 = {
+    files: excelData,
+  };
+
   const getData = async () => {
     if (user) {
       await getAllPatientStatusService({
@@ -90,7 +100,22 @@ const Record = () => {
           } else {
             setRecords(data.result);
             setFilterRecords(data.result);
+            let result = data.result?.documents;
+
+            const formattedData = result?.map((u) => ({
+              نام: u?.name,
+              تلفن: u.tell,
+              تاریخ: moment(u.created_at).locale("fa").format("YYYY/MM/DD"),
+              کارشناس: u.user
+                ? u.user.first_name + " " + u.user.last_name
+                : " ",
+              وضعیت: statusLabel(u.status),
+              "شماره پرونده": u.document_id ? u.document_id : "-",
+            }));
+
+            setExcelData(formattedData);
           }
+
           setStatus(0);
         })
         .catch((err) => {
@@ -130,7 +155,7 @@ const Record = () => {
         }
       });
   };
- 
+
   useEffect(() => {
     if (user && user.token) {
       getData();
@@ -170,6 +195,7 @@ const Record = () => {
   }, [add]);
   if (user && user.user.rule !== 2) return <Error statusCode={404} />;
   if (!records) return <PageLoading />;
+
   return (
     <Layout>
       <div ref={pageRef}>
@@ -206,6 +232,15 @@ const Record = () => {
                   <MdAddCircleOutline />
                 </span>
               </PrimaryBtn>
+            </div>
+            <div className="flex flex-row items-center justify-center rounded-cs   min-w-fit text-primary-900 text-xs h-12">
+              <ExcelDownloder
+                data={data1}
+                filename={"پرونده بیماران"}
+                type={Type.Button}
+              >
+                دانلود اکسل
+              </ExcelDownloder>
             </div>
           </div>
         </div>

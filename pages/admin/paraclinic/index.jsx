@@ -32,6 +32,7 @@ import PrimaryBtn from "../../../common/PrimaryBtn";
 import { CloseBtn } from "../../../common/CloseBtn";
 import PageLoading from "../../../utils/LoadingPage";
 import SearchBox from "../../../Components/SearchBox";
+import { useExcelDownloder } from "react-xls";
 const Paraclinic = () => {
   const [paraclinic, setParaclinic] = useState(null);
   const [data, setData] = useState(null);
@@ -40,6 +41,14 @@ const Paraclinic = () => {
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(50);
   const [types, setTypes] = useState([]);
+
+  const { ExcelDownloder, Type } = useExcelDownloder();
+
+  const [excelData, setExcelData] = useState([]);
+
+  const data1 = {
+    files: excelData,
+  };
 
   const getData = () => {
     getAllParaclinicService({
@@ -50,6 +59,17 @@ const Paraclinic = () => {
           toast.error(data.message[0]);
         } else {
           setParaclinic(data.result);
+
+          let result = data.result;
+
+          const formattedData = result?.map((item) => ({
+            نام: item?.title,
+            نوع: typeTitle(item.type_id),
+            تلفن: item?.tell,
+            آدرس: item?.address,
+          }));
+
+          setExcelData(formattedData);
         }
         setStatus(0);
       })
@@ -181,6 +201,16 @@ const Paraclinic = () => {
                   <MdAddCircleOutline />
                 </span>
               </PrimaryBtn>
+            </div>
+            <div className="flex flex-row items-center justify-center rounded-cs   min-w-fit text-primary-900 text-xs h-12">
+              <ExcelDownloder
+                key={JSON.stringify(excelData)}
+                data={data1}
+                filename={"پاراکلینیک"}
+                type={Type.Button}
+              >
+                دانلود اکسل
+              </ExcelDownloder>
             </div>
           </div>
         </div>

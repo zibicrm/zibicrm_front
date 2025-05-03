@@ -133,8 +133,6 @@ const Panel = () => {
   ];
   const { ExcelDownloder, Type } = useExcelDownloder();
   const [excellFile, setExcellFile] = useState([]);
-  // console.log("excellFile", excellFile);
-  // const [receiveFile, setReceiveFile] = useState(false);
   const [showDownload, setShowdownload] = useState(false);
   const [final, setFinal] = useState(true);
   const [send, setSend] = useState(false);
@@ -157,7 +155,6 @@ const Panel = () => {
           toast.error(data.message[0]);
         } else {
           setTodayPayment(data.result);
-          console.log(data.result, "excell");
           // let result = data.result;
           // let excellExport = [];
           // result.map((u) => {
@@ -359,7 +356,6 @@ const Panel = () => {
             setFinal(false);
             // setRecieve(true)
 
-            console.log(data.result, "excell");
           }
           // setStatusPayment(0);
         })
@@ -784,7 +780,6 @@ const Panel = () => {
               className="w-36 h-12 flex flex-row items-center text-center p-5 hover:shadow-btn duration-200 rounded-cs bg-primary-900  text-white text-xs cursor-pointer "
               onClick={() => {
                 setShowExcell(true); //modal
-                console.log(showDownload);
                 setFinal(true);
                 // setSend(true)
               }}

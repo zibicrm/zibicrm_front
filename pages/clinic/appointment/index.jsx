@@ -374,8 +374,6 @@ const Appointment = () => {
     pageRef.current?.scrollIntoView({ block: "start", behavior: "smooth" });
   }, [page]);
 
-  console.log('USER',user);
-
   useEffect(() => {
     if (user && user.token) {
       getDoctorByClinicService(user.user.clinic_id, {

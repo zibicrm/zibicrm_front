@@ -135,10 +135,8 @@ const Panel = () => {
   const [doneFollowUpStatus, setDoneFollowUpStatus] = useState(0);
   const [showDeliveryresult, setShowDeliveryresult] = useState(false);
 
-  // LOG
-  // console.log("SELECT", select, selectShow);
 
-  console.log(days);
+
   const head = [
     { id: 0, title: "شماره پرونده" },
     { id: 1, title: "نام بیمار" },

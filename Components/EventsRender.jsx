@@ -661,7 +661,6 @@ const EventsRender = ({ data, getData }) => {
                               <PrimaryBtn
                                 text="ثبت درمان"
                                 onClick={() => {
-                                  console.log("clicked");
                                   routerHandler(item.appointment.id, "0");
                                 }}
                               />

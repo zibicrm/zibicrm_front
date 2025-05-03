@@ -30,6 +30,7 @@ import Error from "next/error";
 import PageLoading from "../../../utils/LoadingPage";
 import SearchBox from "../../../Components/SearchBox";
 import PrimaryBtn from "../../../common/PrimaryBtn";
+import { useExcelDownloder } from "react-xls";
 const User = () => {
   const [users, setUsers] = useState(null);
 
@@ -47,6 +48,14 @@ const User = () => {
 
   const userDispatch = useAuthActions();
 
+  const { ExcelDownloder, Type } = useExcelDownloder();
+
+  const [excelData, setExcelData] = useState([]);
+
+  const data1 = {
+    files: excelData,
+  };
+
   const getData = () => {
     getAllUsersService(
       {
@@ -62,6 +71,17 @@ const User = () => {
           toast.error(data.message[0]);
         } else {
           setUsers(data.result);
+
+          let result = data.result;
+
+          const formattedData = result?.map((item) => ({
+            نقش: item?.rules?.name,
+            نام: item.first_name + " " + item.last_name,
+            تلفن: item?.tell,
+            جنسیت: item.gender === 1 ? "مرد" : "زن",
+          }));
+
+          setExcelData(formattedData);
         }
         setStatus(0);
       })
@@ -144,6 +164,16 @@ const User = () => {
                   <MdAddCircleOutline />
                 </span>
               </PrimaryBtn>
+            </div>
+            <div className="flex flex-row items-center justify-center rounded-cs   min-w-fit text-primary-900 text-xs h-12">
+              <ExcelDownloder
+                key={JSON.stringify(excelData)}
+                data={data1}
+                filename={"کاربران"}
+                type={Type.Button}
+              >
+                دانلود اکسل
+              </ExcelDownloder>
             </div>
           </div>
         </div>

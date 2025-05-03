@@ -39,7 +39,6 @@ const HourInput = ({ day, dayFormik, setState, status }) => {
 
   const submitHandler = () => {
 
-    console.log('formik.values.start',formik.values.start);
 
     if (
       !formik.errors.start &&
@@ -65,7 +64,6 @@ const HourInput = ({ day, dayFormik, setState, status }) => {
           moment(`02/13/2020 ${value.end}`).unix()
       );
 
-      console.log(value,filter,filter2,filter3);
 
       if (filter.length) {
         formik.setFieldError("end", "بازه زمانی تکراری است");

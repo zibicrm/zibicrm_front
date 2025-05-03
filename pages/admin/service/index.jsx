@@ -24,6 +24,7 @@ import SearchBox from "../../../Components/SearchBox";
 import PrimaryBtn from "../../../common/PrimaryBtn";
 import { CurrencyNum } from "../../../hooks/CurrencyNum";
 import { useRef } from "react";
+import { useExcelDownloder } from "react-xls";
 const Services = () => {
   const [services, setServices] = useState(null);
   const [data, setData] = useState(null);
@@ -31,6 +32,14 @@ const Services = () => {
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(50);
   const pageRef = useRef(null);
+
+  const { ExcelDownloder, Type } = useExcelDownloder();
+
+  const [excelData, setExcelData] = useState([]);
+
+  const data1 = {
+    files: excelData,
+  };
 
   const getData = () => {
     getAllService({
@@ -41,6 +50,20 @@ const Services = () => {
           toast.error(data.message[0]);
         } else {
           setServices(data.result);
+
+          let result = data.result;
+
+          const formattedData = result?.map((item) => ({
+            عنوان: item?.name,
+            شرح: item?.description,
+            مطب: item?.clinic?.title,
+            'هرینه خدمت': CurrencyNum.format(item.service_cost),
+            'هرینه مواد مصرفی': CurrencyNum.format(item.material_cost),
+            'پورسانت کارشناس': CurrencyNum.format(item.supplier_commission),
+            'مجموع هزینه ها': CurrencyNum.format(item.sum_cost),
+          }));
+
+          setExcelData(formattedData);
         }
         setStatus(0);
       })
@@ -166,6 +189,16 @@ const Services = () => {
                   <MdAddCircleOutline />
                 </span>
               </PrimaryBtn>
+            </div>
+            <div className="flex flex-row items-center justify-center rounded-cs   min-w-fit text-primary-900 text-xs h-12">
+              <ExcelDownloder
+                key={JSON.stringify(excelData)}
+                data={data1}
+                filename={"خدمات"}
+                type={Type.Button}
+              >
+                دانلود اکسل
+              </ExcelDownloder>
             </div>
           </div>
         </div>

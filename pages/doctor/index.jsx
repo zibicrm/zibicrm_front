@@ -113,11 +113,6 @@ const Panel = () => {
   const [doneFollowUpStatus, setDoneFollowUpStatus] = useState(0);
   const [showDeliveryresult, setShowDeliveryresult] = useState(false);
 
-
-
-
-
-  console.log('USER',user);
   const head = [
     { id: 0, title: "شماره پرونده" },
     { id: 1, title: "نام بیمار" },
@@ -283,7 +278,6 @@ const Panel = () => {
     { id: 30, title: "ثبت درمان" },
   ];
 
-
   // GET APPOINTMENTS
   const getAppointment = () => {
     setStatusAppoitmnet(1);
@@ -322,7 +316,7 @@ const Panel = () => {
         {
           clinic_id: user.user.clinic_id,
           dateOfDay: selectShow,
-          doctor_id:  user.user.id,
+          doctor_id: user.user.id,
         },
         {
           Authorization: "Bearer " + user.token,
@@ -1005,9 +999,9 @@ const Panel = () => {
     // },
   ];
 
-
   // ACCESS CHANGE
-  if (user && user.user.rule !== 3 && user.user.doctor !== 1) return <Error statusCode={404} />;
+  if (user && user.user.rule !== 3 && user.user.doctor !== 1)
+    return <Error statusCode={404} />;
   return (
     <Layout>
       <div>

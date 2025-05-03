@@ -40,6 +40,7 @@ import Tabs from "../../../Components/Tabs";
 import SelectInput from "../../../common/SelectInput";
 import { CurrencyNum } from "../../../hooks/CurrencyNum";
 import { useRef } from "react";
+import { useExcelDownloder } from "react-xls";
 const Finance = () => {
   const [records, setRecords] = useState(null);
   const pageRef = useRef(null);
@@ -53,6 +54,15 @@ const Finance = () => {
   const [count, setCount] = useState(50);
   const [page, setPage] = useState(1);
   const [tab, setTab] = useState(0);
+
+  const { ExcelDownloder, Type } = useExcelDownloder();
+
+  const [excelData, setExcelData] = useState([]);
+
+  const data1 = {
+    files: excelData,
+  };
+
   const head = [
     { id: 1, title: "تاریخ" },
     { id: 2, title: "مبلغ پرداختی" },
@@ -86,6 +96,30 @@ const Finance = () => {
           } else {
             setRecords(data.result);
             setFilteredData(data.result);
+
+            let result = data.result.record;
+
+            const formattedData = result?.map((item) => ({
+              تاریخ: moment(item.created_at).locale("fa").format("YYYY/MM/DD"),
+              مبلغ: CurrencyNum.format(item.receive_price),
+              "نوع پرداخت":
+                item.payment_type === 1
+                  ? "نقدی"
+                  : item.payment_type === 2
+                  ? "اقساطی"
+                  : "چکی",
+              توضیحات: item?.description,
+              "نام بیمار": item?.document?.name,
+              "شماره تلفن": item?.document?.tell,
+              کارشناس:
+                item.user && item.user.first_name + " " + item.user.last_name,
+              وضعیت:
+                item.finance_view === 0
+                  ? "در انتظار ثبت"
+                  : "ثبت شده در نرم افزار حسابداری",
+            }));
+
+            setExcelData(formattedData);
           }
           setStatus(0);
         })
@@ -116,6 +150,30 @@ const Finance = () => {
           } else {
             setRecords(data.result);
             setFilteredData(data.result);
+
+            let result = data.result.record;
+
+            const formattedData = result?.map((item) => ({
+              تاریخ: moment(item.created_at).locale("fa").format("YYYY/MM/DD"),
+              مبلغ: CurrencyNum.format(item.receive_price),
+              "نوع پرداخت":
+                item.payment_type === 1
+                  ? "نقدی"
+                  : item.payment_type === 2
+                  ? "اقساطی"
+                  : "چکی",
+              توضیحات: item?.description,
+              "نام بیمار": item?.document?.name,
+              "شماره تلفن": item?.document?.tell,
+              کارشناس:
+                item.user && item.user.first_name + " " + item.user.last_name,
+              وضعیت:
+                item.finance_view === 0
+                  ? "در انتظار ثبت"
+                  : "ثبت شده در نرم افزار حسابداری",
+            }));
+
+            setExcelData(formattedData);
           }
           setStatus(0);
         })
@@ -257,6 +315,16 @@ const Finance = () => {
               />
             </div>
             <CountSelect setCount={setCount} />
+            <div className="flex flex-row items-center justify-center rounded-cs   min-w-fit text-primary-900 text-xs h-12">
+              <ExcelDownloder
+                key={JSON.stringify(excelData)}
+                data={data1}
+                filename={"گزارشات مالی مطب"}
+                type={Type.Button}
+              >
+                دانلود اکسل
+              </ExcelDownloder>
+            </div>
             {/* <div className="w-24 h-12 ">
               <PrimaryBtn text="ثبت پرداختی" onClick={() => setShow(!show)} />
             </div> */}

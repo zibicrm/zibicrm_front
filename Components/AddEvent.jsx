@@ -57,7 +57,6 @@ const AddEvent = ({ setOpen, userInfo, event_type }) => {
   const [qrValue, setQrValue] = useState(null);
   const uuidRef = useRef(false);
 
-  console.log("USER INFO", userInfo);
   let s = moment.now();
   let nowDay = moment(s).format("YYYY/MM/DD");
   const [uuid, setUuid] = useState(null);

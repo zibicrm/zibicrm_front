@@ -570,7 +570,6 @@ const TimelineCalendar = ({ access }) => {
             if (data.status === false) {
               toast.error(data.message[0]);
             } else {
-              console.log("new visit");
               toast.success("نوبت ویزیت با موفقیت رزرو شد");
               setReserve(null);
               setReload(!reload);

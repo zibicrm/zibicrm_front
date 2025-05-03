@@ -23,7 +23,6 @@ const Calendar: React.FC<ICalendarProps> = ({
   const [day, setDay] = useState(0);
   const [nowDay, setNowDay] = useState<number>(0);
   let s = moment.now();
-  // console.log("moment js " ,s);
 
   let nowMonth = moment(s).locale("fa").format("MM");
   let nowYear = moment(s).locale("fa").format("YYYY");
@@ -41,7 +40,6 @@ const Calendar: React.FC<ICalendarProps> = ({
     let d: any = calendarData?.[year]?.[month as keyof typeof calendarData]?.filter(
       (item) => item.id === id
     )[0];
-    // console.log("d" ,d);
 
     if (vip === true) {
       return true;
@@ -76,7 +74,6 @@ const Calendar: React.FC<ICalendarProps> = ({
     if (year === 1401 && month === 1) {
       null;
     } else if (month > 1) {
-      console.log("test  mah " ,month,year,day);
 
       setSelect(null);
       setMonth(month - 1);
@@ -292,7 +289,6 @@ export default Calendar;
 //   };
 //   const setDate = (date: any, day: any, disabled: any) => {
 //     let fullDate = year + "/" + month + "/" + date;
-//     console.log(fullDate);
 
 //     let miladi = moment.from(fullDate, "fa", "YYYY/MM/DD").format("YYYY-MM-DD");
 //     if (!disabled && filterDay(day, date)) {
